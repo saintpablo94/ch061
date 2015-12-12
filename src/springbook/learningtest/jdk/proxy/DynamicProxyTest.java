@@ -10,6 +10,8 @@ import java.lang.reflect.Proxy;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
+import org.springframework.aop.ClassFilter;
+import org.springframework.aop.Pointcut;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.NameMatchMethodPointcut;
@@ -66,6 +68,48 @@ public class DynamicProxyTest {
 		assertThat(proxiedHello.sayThankYou("Toby"),is("Thank you Toby"));
 	}
 	
+	@Test
+	public void classNamePointcutAdvisor(){
+		NameMatchMethodPointcut classMethodPointcut = new NameMatchMethodPointcut(){
+			public ClassFilter getClassFilter(){
+				return new ClassFilter() {
+					
+					@Override
+					public boolean matches(Class<?> clazz) {
+						return clazz.getSimpleName().startsWith("HelloT");
+					}
+				};
+			}
+		};
+		classMethodPointcut.setMappedName("sayH*");
+		
+		checkAdviced(new HelloTarget(), classMethodPointcut, true);
+		
+		class HelloWorld extends HelloTarget{};
+		checkAdviced(new HelloWorld(), classMethodPointcut, false);
+		
+		class HelloToby extends HelloTarget{};
+		checkAdviced(new HelloToby(), classMethodPointcut, true);
+		
+	}
+	
+	private void checkAdviced(Object target, Pointcut pointcut, boolean adviced) {
+		ProxyFactoryBean pfBean = new ProxyFactoryBean();
+		pfBean.setTarget(target);
+		pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+		Hello proxiedHello = (Hello) pfBean.getObject();
+		
+		if(adviced){
+			assertThat(proxiedHello.sayHello("Toby"), is("Hello Toby".toUpperCase()));
+			assertThat(proxiedHello.sayHi("Toby"), is("Hi Toby".toUpperCase()));
+			assertThat(proxiedHello.sayThankYou("Toby"),is("Thank you Toby"));
+		}else {
+			assertThat(proxiedHello.sayHello("Toby"), is("Hello Toby"));
+			assertThat(proxiedHello.sayHi("Toby"), is("Hi Toby"));
+			assertThat(proxiedHello.sayThankYou("Toby"),is("Thank you Toby"));
+		}
+	}
+
 	interface Hello {
 		String sayHello(String name);
 		String sayHi(String name);
