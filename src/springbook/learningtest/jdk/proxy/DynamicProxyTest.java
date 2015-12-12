@@ -7,7 +7,12 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
+import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.aop.support.NameMatchMethodPointcut;
 
 public class DynamicProxyTest {
 	
@@ -29,6 +34,36 @@ public class DynamicProxyTest {
 		assertThat(proxiedHello.sayHi("Toby"), is("Hi Toby".toUpperCase()));
 		assertThat(proxiedHello.sayThankYou("Toby"), is("Thank you Toby".toUpperCase()));
 		
+	}
+	
+	@Test
+	public void proxyFactoryBean(){
+		ProxyFactoryBean pfBean = new ProxyFactoryBean();
+		pfBean.setTarget(new HelloTarget());
+		
+		pfBean.addAdvice(new UppercaseAdvice());
+		
+		Hello proxiedHello = (Hello) pfBean.getObject();
+		assertThat(proxiedHello.sayHello("Toby"), is("Hello Toby".toUpperCase()));
+		assertThat(proxiedHello.sayHi("Toby"), is("Hi Toby".toUpperCase()));
+		assertThat(proxiedHello.sayThankYou("Toby"), is("Thank you Toby".toUpperCase()));
+	}
+	
+	@Test
+	public void pointcutAdviser(){
+		ProxyFactoryBean pfBean = new ProxyFactoryBean();
+		pfBean.setTarget(new HelloTarget());
+		
+		NameMatchMethodPointcut pointcut = new NameMatchMethodPointcut();
+		pointcut.setMappedName("sayH*");
+		
+		pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+		
+		Hello proxiedHello = (Hello) pfBean.getObject();
+		
+		assertThat(proxiedHello.sayHello("Toby"),is("Hello Toby".toUpperCase()));
+		assertThat(proxiedHello.sayHi("Toby"), is("Hi Toby".toUpperCase()));
+		assertThat(proxiedHello.sayThankYou("Toby"),is("Thank you Toby"));
 	}
 	
 	interface Hello {
@@ -95,6 +130,15 @@ public class DynamicProxyTest {
 			}else {
 				return ret;
 			}
+		}
+		
+	}
+
+	static class UppercaseAdvice implements MethodInterceptor{
+
+		public Object invoke(MethodInvocation invocation) throws Throwable {
+			String ret = (String) invocation.proceed();
+			return ret.toUpperCase();
 		}
 		
 	}
