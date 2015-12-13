@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.internal.verification.Times;
+import org.springframework.aop.framework.ProxyFactoryBean;
 //import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -43,9 +44,9 @@ import springbook.user.service.UserServiceImpl.MockUserDao;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserServiceTest {
+	@Autowired ApplicationContext context;
 	@Autowired UserService userService;	
 	@Autowired UserServiceImpl userServiceImpl;
-	@Autowired ApplicationContext context;
 	@Autowired UserDao userDao;
 	@Autowired MailSender mailSender; 
 	@Autowired PlatformTransactionManager transactionManager;
@@ -175,10 +176,11 @@ public class UserServiceTest {
 		TestUserService testUserService = new TestUserService(users.get(3).getId());
 		testUserService.setUserDao(userDao);
 		testUserService.setMailSender(mailSender);
-		
-		TxProxyFactoryBean txProxyFactoryBean = 
-				context.getBean("&userService",TxProxyFactoryBean.class);
+	
+		ProxyFactoryBean txProxyFactoryBean = 
+				context.getBean("&userService", ProxyFactoryBean.class);
 		txProxyFactoryBean.setTarget(testUserService);
+		
 		UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 		/*
 		TransactionHandler txHandler = new TransactionHandler();

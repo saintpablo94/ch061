@@ -10,15 +10,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class FactoryBeanTest {
-	
 	@Autowired ApplicationContext context;
 	
 	@Test
-	public void getMessage() {
+	public void getMessageFromFactoryBean(){
 		Object message = context.getBean("message");
 		assertThat(message, is(Message.class));
 		assertThat(((Message)message).getText(), is("Factory Bean"));
@@ -27,6 +25,6 @@ public class FactoryBeanTest {
 	@Test
 	public void getFactoryBean(){
 		Object factory = context.getBean("&message");
-		assertThat(factory, is(MessageFactoryBean.class));
+		assertThat(factory, is(MessagefactoryBean.class));
 	}
 }

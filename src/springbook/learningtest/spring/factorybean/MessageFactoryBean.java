@@ -2,7 +2,7 @@ package springbook.learningtest.spring.factorybean;
 
 import org.springframework.beans.factory.FactoryBean;
 
-public class MessageFactoryBean implements FactoryBean<Message> {
+public class MessagefactoryBean implements FactoryBean<Message> {
 	String text;
 	
 	public void setText(String text) {
@@ -11,7 +11,7 @@ public class MessageFactoryBean implements FactoryBean<Message> {
 
 	@Override
 	public Message getObject() throws Exception {
-		return Message.newMessage(this.text);
+		return Message.newMessage(text);
 	}
 
 	@Override
