@@ -44,12 +44,13 @@ import springbook.user.service.UserServiceImpl.MockUserDao;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserServiceTest {
-	@Autowired ApplicationContext context;
+
 	@Autowired UserService userService;	
-	@Autowired UserServiceImpl userServiceImpl;
+	@Autowired UserService testUserService;
 	@Autowired UserDao userDao;
 	@Autowired MailSender mailSender; 
 	@Autowired PlatformTransactionManager transactionManager;
+	@Autowired ApplicationContext context;
 	
 	List<User> users;	// test fixture
 	
@@ -73,15 +74,6 @@ public class UserServiceTest {
 		when(mockUserDao.getAll()).thenReturn(this.users);
 		userServiceImpl.setUserDao(mockUserDao);
 		
-		/*
-		MockUserDao mockUserDao = new MockUserDao(this.users);
-		userServiceImpl.setUserDao(mockUserDao);
-		
-		userDao.deleteAll();
-		for(User user : users) userDao.add(user);
-		
-		MockMailSender mockMailSender = new MockMailSender();
-		*/
 		MailSender mockMailSender = mock(MailSender.class);
 		userServiceImpl.setMailSender(mockMailSender);  
 
@@ -101,24 +93,6 @@ public class UserServiceTest {
 		List<SimpleMailMessage> mailMessages = mailMessageArg.getAllValues();
 		assertThat(mailMessages.get(0).getTo()[0], is(users.get(1).getEmail()));
 		assertThat(mailMessages.get(1).getTo()[0], is(users.get(3).getEmail()));
-		
-		/*			
-		List<User> updated = mockUserDao.getUpdated();
-		assertThat(updated.size(), is(2));
-		checkUserAndLevel(updated.get(0), "joytouch", Level.SILVER);
-		checkUserAndLevel(updated.get(1), "madnite1", Level.GOLD);
-	
-		checkLevelUpgraded(users.get(0), false);
-		checkLevelUpgraded(users.get(1), true);
-		checkLevelUpgraded(users.get(2), false);
-		checkLevelUpgraded(users.get(3), true);
-		checkLevelUpgraded(users.get(4), false);
-	
-		List<String> request = mockMailSender.getRequests();  
-		assertThat(request.size(), is(2));  
-		assertThat(request.get(0), is(users.get(1).getEmail()));  
-		assertThat(request.get(1), is(users.get(3).getEmail()));
-		*/	  
 	}
 	
 	private void checkUserAndLevel(User updated, String expectedId, Level exptetedLevel) {
@@ -171,37 +145,13 @@ public class UserServiceTest {
 	}
  
 	@Test
-	@DirtiesContext
 	public void upgradeAllOrNothing() throws Exception {
-		TestUserService testUserService = new TestUserService(users.get(3).getId());
-		testUserService.setUserDao(userDao);
-		testUserService.setMailSender(mailSender);
-	
-		ProxyFactoryBean txProxyFactoryBean = 
-				context.getBean("&userService", ProxyFactoryBean.class);
-		txProxyFactoryBean.setTarget(testUserService);
-		
-		UserService txUserService = (UserService) txProxyFactoryBean.getObject();
-		/*
-		TransactionHandler txHandler = new TransactionHandler();
-		txHandler.setTarget(testUserService);
-		txHandler.setTransactionManger(transactionManager);
-		txHandler.setPattern("upgradeLevels");
-		
-		UserService txUserService = (UserService) Proxy.newProxyInstance(
-				getClass().getClassLoader(), 
-				new Class[]{UserService.class}, 
-				txHandler);
-		
-		UserServiceTx txUserService = new UserServiceTx();
-		txUserService.setTransactionManager(transactionManager);
-		txUserService.setUserService(testUserService);
-		*/ 
 		userDao.deleteAll();			  
 		for(User user : users) userDao.add(user);
 		
 		try {
-			txUserService.upgradeLevels();   
+//			txUserService.upgradeLevels();
+			this.testUserService.upgradeLevels();
 			fail("TestUserServiceException expected"); 
 		}
 		catch(TestUserServiceException e) { 
@@ -210,13 +160,13 @@ public class UserServiceTest {
 		checkLevelUpgraded(users.get(1), false);
 	}
 
+	@Test
+	public void advisorAutoProxyCreator(){
+		assertThat(testUserService, is(java.lang.reflect.Proxy.class));
+	}
 	
-	static class TestUserService extends UserServiceImpl {
-		private String id;
-		
-		private TestUserService(String id) {  
-			this.id = id;
-		}
+	static class TestUserServiceImpl extends UserServiceImpl {
+		private String id = "madnite1";
 
 		protected void upgradeLevel(User user) {
 			if (user.getId().equals(this.id)) throw new TestUserServiceException();  

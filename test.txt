@@ -5,5 +5,7 @@
 IO inputstream berfferedstream fileinputstream 
 
 JDK 다아나믹 프록시 --> FactoryBean implement --> proxyFactoryBean 
-advice(부가기능), pointcut(메서드 선정 알고리즘), MethodInvocation 
+advisor = advice(부가기능), pointcut(메서드 선정 알고리즘), MethodInvocation 
 Spring AOP 
+
+pointcut 표현식을 위해서 필요한 class AspectJExpressionPointcut

@@ -9,40 +9,21 @@
 		<property name="username" value="spring" />
 		<property name="password" value="book" />
 	</bean>
-
+	
 	<bean id="transactionManager" 
 						class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />  
 	</bean>
-		
-	<bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
-		<property name="dataSource" ref="dataSource" />
-	</bean> 
-<!-- 
-	<bean id="userService" class="springbook.user.service.TxProxyFactoryBean">
-		<property name="target" ref="userServiceImpl" />
-		<property name="transactionManager" ref="transactionManager" />
-		<property name="pattern" value="upgradeLevels" />
-		<property name="serviceInterface" value="springbook.user.service.UserService"/>		
-
- -->
- 	<bean id="userServiceImpl" class="springbook.user.service.UserServiceImpl">
-		<property name="userDao" ref="userDao" />
-		<property name="mailSender" ref="mailSender" />
-	</bean>
-	<!-- 
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="mail.server.com" />
-	</bean>
-	 -->
-
-	<bean id="mailSender" class="springbook.user.service.DummyMailSender" />	
+	
+	<!-- aop -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 	
 	<bean id="transactionAdvice" class="springbook.user.service.TransactionAdvice">
 		<property name="transactionManger" ref="transactionManager" />
 	</bean>
-	
-	<bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
+
+	<bean id="transactionPointcut" class="springbook.user.service.NameMatchClassMethodPointcut" >
+		<property name="mappedClassName" value="*ServiceImpl" />
 		<property name="mappedName" value="upgrade*" />
 	</bean>
 	
@@ -51,13 +32,22 @@
 		<property name="pointcut" ref="transactionPointcut" />
 	</bean>
 	
-	<bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="target" ref="userServiceImpl" />
-		<property name="interceptorNames">
-			<list>
-				<value>transactionAdvisor</value>
-			</list>
-		</property>
-	</bean>
+	<!--  application components -->
+	<bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
+		<property name="dataSource" ref="dataSource" />
+	</bean> 
 
+ 	<bean id="userService" class="springbook.user.service.UserServiceImpl">
+		<property name="userDao" ref="userDao" />
+		<property name="mailSender" ref="mailSender" />
+	</bean>
+	
+	<bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserServiceImpl" parent="userService" />
+	
+	<!-- 
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="mail.server.com" />
+	</bean>
+	 -->
+	<bean id="mailSender" class="springbook.user.service.DummyMailSender" />
 </beans>
