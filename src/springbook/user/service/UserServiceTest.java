@@ -25,14 +25,20 @@ import org.springframework.aop.framework.ProxyFactoryBean;
 //import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.dao.TransientDataAccessException;
+import org.springframework.dao.support.DaoSupport;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailMessage;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Any;
 
@@ -51,7 +57,7 @@ public class UserServiceTest {
 	@Autowired MailSender mailSender; 
 	@Autowired PlatformTransactionManager transactionManager;
 	@Autowired ApplicationContext context;
-	
+		
 	List<User> users;	// test fixture
 	
 	@Before
@@ -63,6 +69,15 @@ public class UserServiceTest {
 				new User("madnite1", "test04", "p4", "user4@ksug.org", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD),
 				new User("green", "test05", "p5", "user5@ksug.org", Level.GOLD, 100, Integer.MAX_VALUE)
 				);
+	}
+	
+	@Test
+	@Transactional
+	@Rollback(false)
+	public void transactoinSync(){
+			userService.deleteAll();
+			userService.add(users.get(0));
+			userService.add(users.get(1));		
 	}
 
 	@Test 
@@ -165,12 +180,24 @@ public class UserServiceTest {
 		assertThat(testUserService, is(java.lang.reflect.Proxy.class));
 	}
 	
+	@Test(expected=TransientDataAccessException.class)
+	public void readOnlyTransactionAttribute(){
+		testUserService.getAll();
+	}
+	
 	static class TestUserServiceImpl extends UserServiceImpl {
 		private String id = "madnite1";
 
 		protected void upgradeLevel(User user) {
 			if (user.getId().equals(this.id)) throw new TestUserServiceException();  
 			super.upgradeLevel(user);  
+		}
+		
+		public List<User> getAll() {
+			for(User user : super.getAll()){
+				super.update(user);
+			}
+			return null;
 		}
 	}
 	

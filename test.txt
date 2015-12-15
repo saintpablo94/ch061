@@ -1,11 +1,85 @@
+* Test annotaion 코드 규칙3가지 
 
+* Collection Framework 
+ . List V, L.L, A.L
+ . Map  H.T, H.M, S.H.M - T.M
+ . Set  H.S, S.H.S      - T.S
+ . sync를 보장 
+ 
+* Linked List : node=vertax=element : add
 
-타깃에 부가적인 기능을 런타임 시 다이나믹하게 부여해주기 위해서 프록시를 사용하는 패턴 
-데코레이터 패턴
-IO inputstream berfferedstream fileinputstream 
+* Mybatis : Sqlsession : SqlSessionFactory : SqlSessionFactory.builder
+Lombok : 
+Slf4j, annotation : data, getter, setter, AllArgsConstructor, NoArgsConstructor, ToString 
 
+* Java8 
+Funtional interface 
+Consumer<T>, Function<T,R>, Predicate<T>, Supplier<T> : Lazy evaluation 
+
+* Bean Scope : singleton, request, session, prototype
+
+* String, Stringbuffer, Stringbuiller
+immutable, mmutable  
+          Thread Safe
+             
+* IO inputstream berfferedstream fileinputstream  : IO : 데코레이션패턴
+타깃에 부가적인 기능을 런타임 시 다이나믹하게 부여해주기 위해서 프록시를 사용하는 패턴 데코레이터 패턴
+
+* Spring AOP
 JDK 다아나믹 프록시 --> FactoryBean implement --> proxyFactoryBean 
-advisor = advice(부가기능), pointcut(메서드 선정 알고리즘), MethodInvocation 
-Spring AOP 
+advisor = advice(부가기능), pointcut(메서드 선정 알고리즘), MethodInvocation
 
+DefaultAdvisorAutoProxyCreator 클래스빈등록 ID없다.빈의 후처리기로 참여  
+ 
 pointcut 표현식을 위해서 필요한 class AspectJExpressionPointcut
+AspectJ 표현식 샘플 
+"execution(* *..TargetInterface.*(..))"
+"execution(* *..Tar*.*(..))"
+"execution(* *(..) throws Runtime*)"
+AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+		pointcut.setExpression(expression);
+		
+		assertThat(pointcut.getClassFilter().matches(clazz) &&
+				   pointcut.getMethodMatcher().matches(
+						   clazz.getMethod(methodName, args), null), 
+				   is(expected));
+spring
+bean(*Service)	
+@annotation(org .springframework .transaction .annotation.Transactional)			   
+
+
+DefaultTransactionDefinition 
+- Transaction PROPAGATION (REQUIRED, REQUIRES_NEW, NOT SUPPORTED)
+- isolation level (ISOLATION_DEFAULT
+- timeout
+- read only
+
+Transactionlnterceptor 
+TransactionAttribute를 Properties
+  PROPAGATION_NAME, ISOLATION_NAME, readOnly , timeout_NNNN, -Exceptionl , +Exception2
+
+@Transactional 어노테이션의 대체 fallback 정책
+(1)
+public interface Service{
+	(2)
+	void method1();
+	(3)
+	void method2();
+}
+
+(4)
+public class ServiceImpl implements Service{
+	(5)
+	public void method1(){...}
+	(6)
+	public void method2(){...}
+}
+
+* Exception의 두가지형태 
+checked / unchecked Exception 
+
+* JVM 설명
+
+* GC설명 
+
+* DB Test
