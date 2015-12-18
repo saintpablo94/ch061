@@ -1,4 +1,9 @@
+* Guava
+http://blog.outsider.ne.kr/710
+
 * Test annotaion 코드 규칙3가지 
+
+* 작성코드를 그림으로 표현해보기 
 
 * Collection Framework 
  . List V, L.L, A.L
@@ -9,29 +14,31 @@
 * Linked List : node=vertax=element : add
 
 * Mybatis : Sqlsession : SqlSessionFactory : SqlSessionFactory.builder
-Lombok : 
-Slf4j, annotation : data, getter, setter, AllArgsConstructor, NoArgsConstructor, ToString 
+
+* Lombok : 
+  Slf4j, annotation : data, getter, setter, AllArgsConstructor, NoArgsConstructor, ToString 
 
 * Java8 
-Funtional interface 
-Consumer<T>, Function<T,R>, Predicate<T>, Supplier<T> : Lazy evaluation 
+  Funtional interface 
+  Consumer<T>, Function<T,R>, Predicate<T>, Supplier<T> : Lazy evaluation 
 
 * Bean Scope : singleton, request, session, prototype
 
 * String, Stringbuffer, Stringbuiller
-immutable, mmutable  
-          Thread Safe
+  immutable, mmutable  
+           Thread Safe
              
 * IO inputstream berfferedstream fileinputstream  : IO : 데코레이션패턴
-타깃에 부가적인 기능을 런타임 시 다이나믹하게 부여해주기 위해서 프록시를 사용하는 패턴 데코레이터 패턴
+      타깃에 부가적인 기능을 런타임 시 다이나믹하게 부여해주기 위해서 프록시를 사용하는 패턴 데코레이터 패턴
 
 * Spring AOP
-JDK 다아나믹 프록시 --> FactoryBean implement --> proxyFactoryBean 
-advisor = advice(부가기능), pointcut(메서드 선정 알고리즘), MethodInvocation
+  JDK 다아나믹 프록시 --> FactoryBean implement --> proxyFactoryBean 
+  advisor = advice(부가기능), pointcut(메서드 선정 알고리즘), MethodInvocation
 
-DefaultAdvisorAutoProxyCreator 클래스빈등록 ID없다.빈의 후처리기로 참여  
+   DefaultAdvisorAutoProxyCreator 클래스빈등록 ID없다.빈의 후처리기로 참여  
  
-pointcut 표현식을 위해서 필요한 class AspectJExpressionPointcut
+   pointcut 표현식을 위해서 필요한 class AspectJExpressionPointcut
+
 AspectJ 표현식 샘플 
 "execution(* *..TargetInterface.*(..))"
 "execution(* *..Tar*.*(..))"
@@ -43,12 +50,13 @@ AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 				   pointcut.getMethodMatcher().matches(
 						   clazz.getMethod(methodName, args), null), 
 				   is(expected));
+
 spring
 bean(*Service)	
 @annotation(org .springframework .transaction .annotation.Transactional)			   
 
 
-DefaultTransactionDefinition 
+DefaultTransactionDefinition Class 
 - Transaction PROPAGATION (REQUIRED, REQUIRES_NEW, NOT SUPPORTED)
 - isolation level (ISOLATION_DEFAULT
 - timeout
@@ -76,7 +84,7 @@ public class ServiceImpl implements Service{
 }
 
 * Exception의 두가지형태 
-checked / unchecked Exception 
+  checked / unchecked Exception 
 
 * JVM 설명
 
@@ -86,6 +94,7 @@ checked / unchecked Exception
   ㄴ intermediate operation 
   ㄴ terminal operation 
 
+* algorithms
 Asymptotic notation
 Recursive algorithms
 
