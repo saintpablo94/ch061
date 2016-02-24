@@ -27,6 +27,19 @@ http://blog.outsider.ne.kr/710
 * String, Stringbuffer, Stringbuiller
   immutable, mmutable  
            Thread Safe
+
+mutable과 immutable pattern
+우선 이 두 개념을 간단하게 보자. 공유 자원들은 사용시 thread safety(multi-thread safety)해야 올바른 결과를 보장할 수 있다. 그래서 immutable은 한번 만든 객체는 변경되지 않으며, 변경시에는 새로운 객체를 만든다. 이 말은 synchronized하지 않아도 thread safety하다는 뜻이다. mutable은 원본 자체를 수정해야하기 때문에 synchronized해야만 올바른 결과가 보장된다.
+ 
+String Class
+ 이 녀석은 immutable한 클래스이다. 변경 불가능한 클래스라는 뜻이다. 하지만 안의 메소드(toLowerCase(), trim()... 등등)를 생각해보면 자칫 변경가능한 녀석이라고 생각할 수 있다. 하지만 실제론 안에서 원본 객체는 놔둔채 각메서드에서 새로운 객체를 만들어 기능을 처리한 후 반환한다. 즉, 원본은 변경되지 않는 것이다. 그래서 String 클래스는 객체를 새로 할당하는 시간 및 새로운 메모리사용 때문에 다른 문자열 클래스에 비해 좀 더 느리다고 생각될 수 있다.
+ 
+StringBuffer Class
+ 이 녀석은 mutable하다. 그러니까 가지고 있는 원본을 수정할 수 있도록 만든 Class이다. 당연 thread safety하기 위한 synchronized과정이 있다. 이 synchronized과정에 있어서 단순한 참조를 할경우 String보다 bad performance를 보인다.
+ 
+StringBuilder Class
+ 이 녀석 또한 mutable하다. StringBuffer와 동일한 기능을 갖고있는데 차이점이라고 한다면 thread safety하지 않다. 즉, synchronized 과정이 없다는 것 이다. 그래서 thread safety할 필요 없는 코드라면 stringBuffer가 아닌 StringBuilder를 써야 더 좋은 performance가 나온다.
+
              
 * IO inputstream berfferedstream fileinputstream  : IO : 데코레이션패턴
       타깃에 부가적인 기능을 런타임 시 다이나믹하게 부여해주기 위해서 프록시를 사용하는 패턴 데코레이터 패턴
