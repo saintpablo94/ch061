@@ -98,6 +98,12 @@ public class ServiceImpl implements Service{
 
 * Exception의 두가지형태 
   checked / unchecked Exception 
+  checked exception은 컴파일러가 체크하는 익셉션이고,
+  unchecked exception은 컴파일러가 체크하지 않는 익셉션입니다. 
+
+다시 말해서 checked exception은 try 문으로 처리하거나 메서드 선언에 throws 절을 써야 컴파일 에러가 발생하지 않고,
+unchecked exception은 그렇게 하지 않아도 컴파일 에러가 발생하지 않습니다.
+http://cfile28.uf.tistory.com/image/217C6B4552AF12B432A3FF
 
 * JVM 설명
 
