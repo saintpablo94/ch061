@@ -5,7 +5,9 @@ http://blog.outsider.ne.kr/710
 
 * 작성코드를 그림으로 표현해보기 
 
-* Collection Framework 
+* Collection Framework  
+http://withwani.tistory.com/150
+
  . List V, L.L, A.L
  . Map  H.T, H.M, S.H.M - T.M
  . Set  H.S, S.H.S      - T.S
@@ -14,6 +16,7 @@ http://blog.outsider.ne.kr/710
 * Linked List : node=vertax=element : add
 
 * Mybatis : Sqlsession : SqlSessionFactory : SqlSessionFactory.builder
+   http://www.mybatis.org/spring/ko/sqlsession.html
 
 * Lombok : 
   Slf4j, annotation : data, getter, setter, AllArgsConstructor, NoArgsConstructor, ToString 
