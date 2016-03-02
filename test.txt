@@ -108,6 +108,7 @@ public class ServiceImpl implements Service{
 unchecked exception은 그렇게 하지 않아도 컴파일 에러가 발생하지 않습니다.
 http://cfile28.uf.tistory.com/image/217C6B4552AF12B432A3FF
 
+* OOM 대처방안 혹은 처리했던 경험
 * JVM 설명
 
 * GC설명 
