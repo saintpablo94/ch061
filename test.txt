@@ -113,6 +113,34 @@ http://cfile28.uf.tistory.com/image/217C6B4552AF12B432A3FF
 
 * GC설명 
 
+JDK8에선 PermGen이 완전히 사라지고 Metaspace가 이를 대신 함.
+http://goo.gl/wA4tkJ
+
+Young 영역(Yong Generation 영역)
+	새롭게 생성한 객체의 대부분이 여기에 위치한다. 
+	대부분의 객체가 금방 접근 불가능 상태가 되기 때문에 매우 많은 객체가 Young 영역에 생성되었다가 사라진다. 
+	이 영역에서 객체가 사라질때 Minor GC가 발생한다고 말한다.
+Old 영역(Old Generation 영역)
+	접근 불가능 상태로 되지 않아 Young 영역에서 살아남은 객체가 여기로 복사된다. 
+	대부분 Young 영역보다 크게 할당하며, 크기가 큰 만큼 Young 영역보다 GC는 적게 발생한다. 
+	이 영역에서 객체가 사라질 때 Major GC(혹은 Full GC)가 발생한다고 말한다.
+
+Old 영역에 대한 GC
+Old 영역은 기본적으로 데이터가 가득 차면 GC를 실행한다. 
+GC 방식에 따라서 처리 절차가 달라지므로, 어떤 GC 방식이 있는지 살펴보면 이해가 쉬울 것이다. 
+GC 방식은 JDK 7을 기준으로 5가지 방식이 있다.
+
+Serial GC
+Parallel GC
+Parallel Old GC(Parallel Compacting GC)
+Concurrent Mark & Sweep GC(이하 CMS)
+G1(Garbage First) GC
+이 중에서 운영 서버에서 절대 사용하면 안 되는 방식이 Serial GC다. 
+Serial GC는 데스크톱의 CPU 코어가 하나만 있을 때 사용하기 위해서 만든 방식이다. 
+Serial GC를 사용하면 애플리케이션의 성능이 많이 떨어진다.
+
+http://d2.naver.com/helloworld/1329
+
 * stream 
   ㄴ intermediate operation 
   ㄴ terminal operation 
