@@ -137,15 +137,18 @@ Quick sort
 * singleton 코드
 public TestClass {
 	/*유일한 인스턴스 저장 객체 선언*/
-	private static TestClass uniqueInstance ;
+	private static TestClass _instance ;
 	private TestClass(){ }
 
 	/*외부에서 사용할 함수 선언 클래스를 생성할떄 쓴다 */
-	public static TestClass getInstance(){ 
-		if(uniqueInstance  ==null){//있는지 체크 없으면 
-			uniqueInstance  = new TestClass (); //생성한뒤
-		}
-		return uniqueInstance  ;//성성자를 넘긴다.
+	public static Singleton getInstanceDC() { 
+		if (_instance == null) { // Single Checked 
+			synchronized (Singleton.class) { 
+				if (_instance == null) { // Double checked 
+					_instance = new Singleton(); 
+				} 
+			} 
+		} return _instance; 
 	}
 }
 
