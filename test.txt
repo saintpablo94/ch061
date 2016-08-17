@@ -17,6 +17,26 @@ http://withwani.tistory.com/150
 
 * Mybatis : Sqlsession : SqlSessionFactory : SqlSessionFactory.builder
    http://www.mybatis.org/spring/ko/sqlsession.html
+   
+JPA N+1쿼리 문제
+글로벌 페치 전략을 EAGER로 변경하면?
+
+단일 엔터티 조회 시 (ex. OrderRepository.findOne() )에는 
+글로벌 페치 전략을 EAGER로 변경하면 JOIN을 통해 실제 실행되는 쿼리 수를 줄일 수 있다.
+
+하지만, 글로벌 페치 전략은 JPQL 실행 시 (ex. OrderRepository.findAll() )에는 
+적용되지 않는다.
+즉, JPQL 실행 시 N + 1 쿼리 문제는 EAGER Fetch로는 해결되지 않는다.
+
+1 Fetch Join 사용
+	MultipleBagFetchException 발생: 컬렉션 타입을 List -> Set으로 변경
+2 글로벌 페치 전략 - LAZY 사용
+	@OneToOne, @ManyToOne : EAGER
+	@OneToMany, @ManyToMany : LAZY
+3 OSIV 적용
+	글로벌 페치 전략을 LAZY로 변경하면, 영속성 컨텍스트를 벗어나서 
+	Lazy Loading 시도 시 LazyInitializationException이 발생
+	-> OSIV를 적용을 통해 해결
 
 * Lombok : 
   Slf4j, annotation : data, getter, setter, AllArgsConstructor, NoArgsConstructor, ToString 
