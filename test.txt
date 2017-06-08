@@ -206,6 +206,16 @@ public TestClass {
 	}
 }
 
+*  HTTP Method	의미 	 
+ POST	Create 	 
+ GET	Select 	 
+ PUT	 Create or Update	 
+ DELETE	Delete 	 
+
+REST를 정리하면 HTTP URI + HTTP Method 이다. URI로 대상 자원을 명시하고 Method로 해당 자원에 대한 행위를 정의
+
+REST의 가장 큰 특징중의 하나가 모든 자원을 Resource 즉 자원으로 표현한다는 것이다. 이 Resource는 HTTP URL에 의해서 표현된다. 예를 들어 javastudy 사이트의 bcho 라는 사용자를 표현하면  http://www.javastudy.co.kr/users/bcho 로 표현이 가능하고, 서울 강남구 사무실의 9층의 HP프린터를 표현할때는 http://printers/localtion/seoul/kangnamgu/9f/hp 식으로 표현을 한다. 이로써 HTTP URI를 통해서 모든 Resource를 표현이 가능하다. 
+
 * DB Test
 
 * zookeeper 용도
